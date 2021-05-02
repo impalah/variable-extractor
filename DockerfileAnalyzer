@@ -1,0 +1,39 @@
+FROM python:3.7-stretch
+LABEL maintainer="impalah@gmail.com"
+
+# https://www.reddit.com/r/learnpython/comments/5ebkq6/what_does_pythonunbuffered1_do/
+ENV PYTHONUNBUFFERED 0
+
+ENV FLASK_APP /var/analyzer/analyze_mr_server.py
+
+# Pip upgrade and install
+RUN \
+  pip install -U setuptools && \
+  pip install -U pip
+
+# For pdftotext library (depends on poppler)
+RUN \
+  apt-get update && \
+  apt-get install -y build-essential libpoppler-cpp-dev pkg-config python-dev
+
+# awscli not need here
+# RUN \
+#   pip install -U awscli
+
+# Create directory
+RUN \
+  mkdir -p /var/analyzer
+
+WORKDIR /var/analyzer
+
+# Filecopy
+ADD requirements.txt /var/analyzer/
+
+RUN pip install -r requirements.txt
+
+ADD src /var/analyzer/
+
+EXPOSE 5001
+
+# No entry point needed
+# Using shell mode of entrypoint.

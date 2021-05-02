@@ -1,0 +1,11 @@
+# Unneccesary files
+Dockerfile
+README.md
+
+# Nothing from deployment dir
+deployment
+
+# Ignore files
+*_pycache_*
+*.pyc
+*.log
